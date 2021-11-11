@@ -1,9 +1,11 @@
+from django.urls import path
+from .views import PostList, PostDetail,My_api
 
-from django.contrib import admin
-from django.urls import path,include
+app_name = 'blog_api'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('blog.urls'),namespace='blog'),
-    path('admin/',include('blogapi.urls'),namespace='blog_api'),
+    path('<int:pk>/', PostDetail.as_view(), name='detailcreate'),
+    path('', PostList.as_view(), name='listcreate'),
+    path('test', My_api.as_view(), name='test'),
+    
 ]
