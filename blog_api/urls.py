@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import PostList, PostDetail,My_api
+from .views import PostList, PostDetail,My_view
 
 app_name = 'blog_api'
 
 urlpatterns = [
     path('<int:pk>/', PostDetail.as_view(), name='detailcreate'),
     path('', PostList.as_view(), name='listcreate'),
-    path('test', My_api.as_view(), name='test'),
+    path('test', My_view.as_view(), name='test'),
     
 ]
