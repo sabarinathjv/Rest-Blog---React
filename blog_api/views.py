@@ -19,7 +19,7 @@ from rest_framework.response  import Response
 
 
 
-class PostList(generics.ListCreateAPIView):
+class PostList(generics.ListCreateAPIView):#test
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
