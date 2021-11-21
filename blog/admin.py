@@ -9,3 +9,9 @@ class AuthorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Category)
+admin.site.register(models.Test)
+
+
+
+admin.site.register(models.Product)
+admin.site.register(models.Tag)

@@ -37,4 +37,32 @@ class Post(models.Model):
         ordering = ('-published',)  
 
     def __str__(self):
-        return self.title        
+        return self.title    
+
+
+
+
+class Test(models.Model):
+    name = models.CharField(max_length=255)
+    category = models.ManyToManyField(Category)
+   
+
+
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name 
+
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    tag = models.ManyToManyField(Tag)
+
+    def __str__(self):
+        return self.name
+
+
+

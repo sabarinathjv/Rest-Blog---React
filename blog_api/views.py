@@ -1,5 +1,5 @@
 from rest_framework import generics
-from blog.models import Post
+from blog.models import Post,Test,Product,Tag
 from .serializers import PostSerializer
 from rest_framework.views import APIView
 from rest_framework.response  import Response
@@ -18,37 +18,36 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly, 
 #RetrieveDestroyAPIView  get and delete
 #RetrieveUpdateDestroyAPIView  put , get , delete
 
-#[DjangoModelPermissions]#admin has all the permission , other users only have the permissions we given throrh the admin page based on the model(view,edit,create,delete),or they must be inside a group which has the permission
+#[DjangoModelPermissions]#only can see data when logged in ,admin has all the permission , other users only have the permissions we given throrh the admin page based on the model(view,edit,create,delete),or they must be inside a group which has the permission
 #[DjangoModelPermissionsOrAnonReadOnly ]combiation of avove and anonyous read acess 
 
 
-class PostUserWritePermission(BasePermission):#for custom permission
+class PostUserWritePermission(BasePermission):#for custom permission,returns true 
     message = 'Editing posts is restricted to the author only.'
 
     def has_object_permission(self, request, view, obj):
 
         if request.method in SAFE_METHODS:
             return True
-
         return obj.author == request.user
 
-class PostList(generics.ListCreateAPIView):#test
-    permission_classes = [DjangoModelPermissions]#admin can view , add data
+class PostList(generics.ListCreateAPIView,PostUserWritePermission):
+    permission_classes = [PostUserWritePermission]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [PostUserWritePermission]#allow edit and delete by our own post only
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    
 
 
 
 class My_view(APIView):
-    # print(a)
+
     def get(self,request):
-        print(request.user)
         return Response({"":""})
 
