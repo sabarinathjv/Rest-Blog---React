@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager#base user manager wont work here , using custum manager
+from django.contrib.auth.models import UserManager
 
 
 class CustomAccountManager(BaseUserManager):
@@ -34,7 +35,7 @@ class CustomAccountManager(BaseUserManager):
         return user
 
 
-class NewUser(AbstractBaseUser, PermissionsMixin):#PermissionsMixin-allow to use django permission framework to use in out own model
+class NewUser(AbstractBaseUser,PermissionsMixin):#PermissionsMixin-allow to use django permission framework to use in out own model
 
     email = models.EmailField(_('email address'), unique=True)
     user_name = models.CharField(max_length=150, unique=True)
@@ -52,3 +53,9 @@ class NewUser(AbstractBaseUser, PermissionsMixin):#PermissionsMixin-allow to use
 
     def __str__(self):
         return self.user_name
+
+
+
+
+
+

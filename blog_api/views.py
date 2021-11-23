@@ -17,7 +17,6 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly, 
 #RetrieveUpdateAPIView  allow get and update , allows blank firld also
 #RetrieveDestroyAPIView  get and delete
 #RetrieveUpdateDestroyAPIView  put , get , delete
-
 #[DjangoModelPermissions]#only can see data when logged in ,admin has all the permission , other users only have the permissions we given throrh the admin page based on the model(view,edit,create,delete),or they must be inside a group which has the permission
 #[DjangoModelPermissionsOrAnonReadOnly ]combiation of avove and anonyous read acess 
 
@@ -49,5 +48,14 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 class My_view(APIView):
 
     def get(self,request):
+        # a = Tag.objects.create(name="dasappan")
+        # print(a)#will return instance
+        # b =Tag(name="dasappan")
+        # c = b.save()
+        # print(c) #will return none
+        
+
+
+
         return Response({"":""})
 
