@@ -7,7 +7,8 @@ from rest_framework.response  import Response
 from rest_framework.permissions import SAFE_METHODS,IsAuthenticated, AllowAny,IsAuthenticatedOrReadOnly, BasePermission, IsAdminUser, DjangoModelPermissions
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework import filters
+from rest_framework import filters #type 3
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # from rest_framework.fields import CurrentUserDefault
 #CreateAPIView    only for creation
@@ -137,25 +138,76 @@ class PostLists(viewsets.ModelViewSet):#these 3 lines do all the operation menti
 class PostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    
 
-    def get_queryset(self):
-        user = self.request.user
-        return Post.objects.filter(author=user)
+    # def get_queryset(self): #type 1 which hardcode the filtering with id , not here
+    #     user = self.request.user
+    #     return Post.objects.filter(author=user)
 
-class PostDetail(generics.RetrieveAPIView):
+class PostDetail(generics.ListAPIView):
     serializer_class = PostSerializer
 
-    def get_queryset(self):
-        slug = self.request.query_params.get('slug', None)
-        print(slug)
-        return Post.objects.filter(slug=slug)
 
-class PostListDetailfilter(generics.ListAPIView):
+    def get_queryset(self):#filter by slug individul #type 2 
+        slug = self.kwargs['pk']
+        return Post.objects.filter(slug=slug)    
 
+class PostListDetailfilter(generics.ListAPIView):#more advanced
+    #api/search/?search=first
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['^slug']
+
+    # '^' Starts-with search.
+    # '=' Exact matches.
+    # '@' Full-text search. (Currently only supported Django's PostgreSQL backend.)
+    # '$' Regex search.
+
+
+class CreatePost(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class AdminPostDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class EditPost(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+class DeletePost(generics.RetrieveDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+
+
+###################################333file upload section
+
+class CreatePost(APIView):
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser] #removing also didt show any error
+
+    def post(self, request, format=None):
+        print(request.data)
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 
 
  
